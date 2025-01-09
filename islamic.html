@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Calendar & Prayer Times - India</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&family=Zilla+Slab&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-family: 'Zilla Slab', serif;
+        }
+
+        .calendar {
+            font-size: 1.2em;
+            margin: 20px 0;
+            text-align: center;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .calendar p {
+            font-size: 1.2em;
+            margin: 5px 0;
+        }
+
+        .prayer-times {
+            background-color: #fff;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .prayer-times h3 {
+            font-size: 1.6em;
+            color: #007bff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .prayer-times table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .prayer-times table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        .prayer-times th, td {
+            padding: 12px;
+        }
+
+        .prayer-times th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .prayer-times td {
+            background-color: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            color: white;
+            margin-top: 30px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Islamic Calendar & Prayer Times - India</h1>
+    </div>
+
+    <!-- Islamic Calendar Section -->
+    <div class="calendar" id="calendar">
+        <h2>Islamic Date</h2>
+        <p id="islamicDate"></p>
+        <p id="gregorianDate"></p>
+    </div>
+
+    <!-- Prayer Times Section -->
+    <div class="prayer-times">
+        <h3>Today's Prayer Times (India)</h3>
+        <table id="prayerTimesTable">
+            <thead>
+                <tr>
+                    <th>Prayer</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Fajr</td><td id="fajr">Loading...</td></tr>
+                <tr><td>Dhuhr</td><td id="dhuhr">Loading...</td></tr>
+                <tr><td>Asr</td><td id="asr">Loading...</td></tr>
+                <tr><td>Maghrib</td><td id="maghrib">Loading...</td></tr>
+                <tr><td>Isha</td><td id="isha">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Islamic Tools. All Rights Reserved.</p>
+</footer>
+
+<script>
+    // Function to fetch prayer times using the Aladhan API for India
+    function getPrayerTimes() {
+        const url = 'http://api.aladhan.com/v1/timingsByCity?city=Delhi&country=India&method=2';
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const times = data.data.timings;
+                document.getElementById('fajr').textContent = times.Fajr;
+                document.getElementById('dhuhr').textContent = times.Dhuhr;
+                document.getElementById('asr').textContent = times.Asr;
+                document.getElementById('maghrib').textContent = times.Maghrib;
+                document.getElementById('isha').textContent = times.Isha;
+            })
+            .catch(error => {
+                console.error('Error fetching prayer times:', error);
+            });
+    }
+
+    // Function to get the Islamic calendar date and Gregorian date
+    function getIslamicCalendar() {
+        const today = new Date();
+        const islamicDate = new Intl.DateTimeFormat('en', {
+            year: 'numeric', month: 'numeric', day: 'numeric', 
+            calendar: 'islamic', numberingSystem: 'latn'
+        }).format(today);
+
+        const gregorianDate = today.toLocaleDateString();
+
+        document.getElementById('islamicDate').textContent = `Islamic Date: ${islamicDate}`;
+        document.getElementById('gregorianDate').textContent = `Gregorian Date: ${gregorianDate}`;
+    }
+
+    // Fetch prayer times and calendar when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        getPrayerTimes();
+        getIslamicCalendar();
+    });
+</script>
+
+</body>
+</html>
